@@ -1,0 +1,85 @@
+# Configuration for Dependabot automatic dependency updates
+# See: https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+
+version: 2
+updates:
+  # Python dependencies (Poetry)
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "devops-thiago"
+    assignees:
+      - "devops-thiago"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps-dev"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "python"
+    allow:
+      - dependency-type: "direct"
+      - dependency-type: "indirect"
+    groups:
+      opentelemetry:
+        patterns:
+          - "opentelemetry*"
+      fastapi:
+        patterns:
+          - "fastapi*"
+          - "uvicorn*"
+          - "pydantic*"
+      dev-tools:
+        patterns:
+          - "pytest*"
+          - "black"
+          - "ruff"
+          - "mypy"
+          - "types-*"
+
+  # Docker dependencies
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "devops-thiago"
+    assignees:
+      - "devops-thiago"
+    commit-message:
+      prefix: "docker"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "docker"
+
+  # GitHub Actions dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/.github/workflows"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "devops-thiago"
+    assignees:
+      - "devops-thiago"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "github-actions"
+      - "ci"
