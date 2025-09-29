@@ -10,7 +10,7 @@ on:
 
 env:
   REGISTRY: docker.io
-  IMAGE_NAME: thiagosg/otel-example-python
+  IMAGE_NAME: thiagosg/otel-crud-api-python
 
 jobs:
   build-and-push:
