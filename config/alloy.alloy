@@ -37,7 +37,7 @@ otelcol.exporter.otlp "tempo" {
   }
 }
 
-// Export traces to Tempo
+// Export traces to Mimir
 otelcol.exporter.otlphttp "mimir" {
   client {
     endpoint = "http://mimir:9009/otlp"
@@ -47,7 +47,7 @@ otelcol.exporter.otlphttp "mimir" {
   }
 }
 
-// Export traces to Tempo
+// Export traces to Loki
 otelcol.exporter.otlphttp "loki" {
   client {
     endpoint = "http://loki:3100/otlp"

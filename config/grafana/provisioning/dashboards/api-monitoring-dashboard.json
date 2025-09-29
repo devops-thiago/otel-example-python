@@ -106,9 +106,9 @@
             "type": "prometheus",
             "uid": "$datasource"
           },
-          "expr": "sum(rate(http_requests_total{job=~\"$job\"}[5m])) by (method, route)",
+          "expr": "sum(rate(http_server_duration_count{job=~\"$job\"}[5m])) by (http_method, http_target)",
           "interval": "",
-          "legendFormat": "{{method}} {{route}}",
+          "legendFormat": "{{http_method}} {{http_target}}",
           "refId": "A"
         }
       ],
@@ -200,9 +200,9 @@
             "type": "prometheus",
             "uid": "$datasource"
           },
-          "expr": "histogram_quantile(0.50, sum(rate(http_request_duration_seconds_bucket{job=~\"$job\"}[5m])) by (le, method, route)) * 1000",
+          "expr": "histogram_quantile(0.50, sum(rate(http_server_duration_bucket{job=~\"$job\"}[5m])) by (le, http_method, http_target)) * 1000",
           "interval": "",
-          "legendFormat": "P50 {{method}} {{route}}",
+          "legendFormat": "P50 {{http_method}} {{http_target}}",
           "refId": "A"
         }
       ],
@@ -294,9 +294,9 @@
             "type": "prometheus",
             "uid": "$datasource"
           },
-          "expr": "histogram_quantile(0.90, sum(rate(http_request_duration_seconds_bucket{job=~\"$job\"}[5m])) by (le, method, route)) * 1000",
+          "expr": "histogram_quantile(0.90, sum(rate(http_server_duration_bucket{job=~\"$job\"}[5m])) by (le, http_method, http_target)) * 1000",
           "interval": "",
-          "legendFormat": "P90 {{method}} {{route}}",
+          "legendFormat": "P90 {{http_method}} {{http_target}}",
           "refId": "A"
         }
       ],
@@ -388,9 +388,9 @@
             "type": "prometheus",
             "uid": "$datasource"
           },
-          "expr": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{job=~\"$job\"}[5m])) by (le, method, route)) * 1000",
+          "expr": "histogram_quantile(0.99, sum(rate(http_server_duration_bucket{job=~\"$job\"}[5m])) by (le, http_method, http_target)) * 1000",
           "interval": "",
-          "legendFormat": "P99 {{method}} {{route}}",
+          "legendFormat": "P99 {{http_method}} {{http_target}}",
           "refId": "A"
         }
       ],
@@ -528,10 +528,30 @@
             "type": "prometheus",
             "uid": "$datasource"
           },
-          "expr": "sum(rate(http_requests_total{job=~\"$job\"}[5m])) by (status_class)",
+          "expr": "sum(rate(http_server_duration_count{job=~\"$job\",http_status_code=~\"2..\"}[5m]))",
           "interval": "",
-          "legendFormat": "{{status_class}}",
+          "legendFormat": "2xx",
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "sum(rate(http_server_duration_count{job=~\"$job\",http_status_code=~\"4..\"}[5m]))",
+          "interval": "",
+          "legendFormat": "4xx",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "sum(rate(http_server_duration_count{job=~\"$job\",http_status_code=~\"5..\"}[5m]))",
+          "interval": "",
+          "legendFormat": "5xx",
+          "refId": "C"
         }
       ],
       "title": "HTTP Responses by Status Class",
@@ -622,7 +642,7 @@
             "type": "prometheus",
             "uid": "$datasource"
           },
-          "expr": "sum(rate(http_requests_total{job=~\"$job\",status_class=\"2xx\"}[5m])) / sum(rate(http_requests_total{job=~\"$job\"}[5m])) * 100",
+          "expr": "sum(rate(http_server_duration_count{job=~\"$job\",http_status_code=~\"2..\"}[5m])) / sum(rate(http_server_duration_count{job=~\"$job\"}[5m])) * 100",
           "interval": "",
           "legendFormat": "Success Rate",
           "refId": "A"
@@ -716,127 +736,13 @@
             "type": "prometheus",
             "uid": "$datasource"
           },
-          "expr": "sum(rate(http_requests_total{job=~\"$job\"}[5m])) by (route)",
+          "expr": "sum(rate(http_server_duration_count{job=~\"$job\"}[5m])) by (http_target)",
           "interval": "",
-          "legendFormat": "{{route}}",
+          "legendFormat": "{{http_target}}",
           "refId": "A"
         }
       ],
       "title": "Requests by Route",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "vis": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 16
-      },
-      "id": 6,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "$datasource"
-          },
-          "expr": "db_sql_connection_open{job=~\"$job\",status=\"idle\"}",
-          "interval": "",
-          "legendFormat": "{{db_system}} Idle Connections",
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "$datasource"
-          },
-          "expr": "db_sql_connection_open{job=~\"$job\",status=\"inuse\"}",
-          "interval": "",
-          "legendFormat": "{{db_system}} In Use Connections",
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "$datasource"
-          },
-          "expr": "db_sql_connection_open{job=~\"$job\",status=\"idle\"} + db_sql_connection_open{job=~\"$job\",status=\"inuse\"}",
-          "interval": "",
-          "legendFormat": "Total Connections",
-          "refId": "C"
-        }
-      ],
-      "title": "Database Connection Pool",
       "type": "timeseries"
     },
     {
@@ -903,7 +809,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 24
+        "y": 16
       },
       "id": 7,
       "options": {
@@ -924,7 +830,7 @@
             "type": "prometheus",
             "uid": "$datasource"
           },
-          "expr": "process_runtime_memory_rss{job=~\"$job\"}",
+          "expr": "process_runtime_cpython_memory{job=~\"$job\",type=\"rss\"}",
           "interval": "",
           "legendFormat": "RSS Memory",
           "refId": "A"
@@ -934,7 +840,7 @@
             "type": "prometheus",
             "uid": "$datasource"
           },
-          "expr": "process_runtime_memory_vms{job=~\"$job\"}",
+          "expr": "process_runtime_cpython_memory{job=~\"$job\",type=\"vms\"}",
           "interval": "",
           "legendFormat": "VMS Memory",
           "refId": "B"
@@ -1007,7 +913,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 24
+        "y": 16
       },
       "id": 8,
       "options": {
@@ -1028,7 +934,7 @@
             "type": "prometheus",
             "uid": "$datasource"
           },
-          "expr": "process_runtime_thread_count{job=~\"$job\"}",
+          "expr": "process_runtime_cpython_thread_count{job=~\"$job\"}",
           "interval": "",
           "legendFormat": "Thread Count",
           "refId": "A"
@@ -1038,7 +944,7 @@
             "type": "prometheus",
             "uid": "$datasource"
           },
-          "expr": "rate(process_runtime_gc_count_total{job=~\"$job\"}[5m])",
+          "expr": "rate(process_runtime_cpython_gc_count{job=~\"$job\"}[5m])",
           "interval": "",
           "legendFormat": "GC Count/sec",
           "refId": "B"
@@ -1048,597 +954,13 @@
             "type": "prometheus",
             "uid": "$datasource"
           },
-          "expr": "rate(process_runtime_cpu_time_seconds_total{job=~\"$job\"}[5m])",
+          "expr": "rate(process_runtime_cpython_cpu_time{job=~\"$job\"}[5m])",
           "interval": "",
           "legendFormat": "CPU Time Rate",
           "refId": "C"
         }
       ],
       "title": "Python Runtime Metrics",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "vis": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 0,
-        "y": 32
-      },
-      "id": 9,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "$datasource"
-          },
-          "expr": "histogram_quantile(0.50, sum(rate(db_query_duration_bucket{job=~\"$job\"}[5m])) by (le, db_operation, db_table)) * 1000",
-          "interval": "",
-          "legendFormat": "P50 {{db_operation}} {{db_table}}",
-          "refId": "A"
-        }
-      ],
-      "title": "Database Query Latency - P50",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "vis": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 8,
-        "y": 32
-      },
-      "id": 10,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "$datasource"
-          },
-          "expr": "histogram_quantile(0.90, sum(rate(db_query_duration_bucket{job=~\"$job\"}[5m])) by (le, db_operation, db_table)) * 1000",
-          "interval": "",
-          "legendFormat": "P90 {{db_operation}} {{db_table}}",
-          "refId": "A"
-        }
-      ],
-      "title": "Database Query Latency - P90",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "vis": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 16,
-        "y": 32
-      },
-      "id": 11,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "$datasource"
-          },
-          "expr": "histogram_quantile(0.99, sum(rate(db_query_duration_bucket{job=~\"$job\"}[5m])) by (le, db_operation, db_table)) * 1000",
-          "interval": "",
-          "legendFormat": "P99 {{db_operation}} {{db_table}}",
-          "refId": "A"
-        }
-      ],
-      "title": "Database Query Latency - P99",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "vis": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "ops"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 40
-      },
-      "id": 12,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "$datasource"
-          },
-          "expr": "rate(db_query_count{job=~\"$job\"}[5m])",
-          "interval": "",
-          "legendFormat": "{{db_operation}} on {{db_table}}",
-          "refId": "A"
-        }
-      ],
-      "title": "Database Query Rate by Operation",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "vis": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "errors/sec"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 40
-      },
-      "id": 13,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "$datasource"
-          },
-          "expr": "rate(db_query_errors{job=~\"$job\"}[5m])",
-          "interval": "",
-          "legendFormat": "{{db_operation}} {{error_type}} on {{db_table}}",
-          "refId": "A"
-        }
-      ],
-      "title": "Database Query Errors",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "vis": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 48
-      },
-      "id": 14,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "$datasource"
-          },
-          "expr": "db_connections_active{job=~\"$job\",connection_type=\"active\"}",
-          "interval": "",
-          "legendFormat": "Active Connections",
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "$datasource"
-          },
-          "expr": "db_connections_active{job=~\"$job\",connection_type=\"idle\"}",
-          "interval": "",
-          "legendFormat": "Idle Connections",
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "$datasource"
-          },
-          "expr": "db_connections_active{job=~\"$job\",connection_type=\"active\"} + db_connections_active{job=~\"$job\",connection_type=\"idle\"}",
-          "interval": "",
-          "legendFormat": "Total Active Connections",
-          "refId": "C"
-        }
-      ],
-      "title": "Database Active Connections",
       "type": "timeseries"
     },
     {
@@ -1705,7 +1027,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 56
+        "y": 24
       },
       "id": 17,
       "options": {
@@ -1799,7 +1121,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 56
+        "y": 24
       },
       "id": 18,
       "options": {
@@ -1893,7 +1215,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 64
+        "y": 32
       },
       "id": 19,
       "options": {
@@ -1997,7 +1319,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 64
+        "y": 32
       },
       "id": 20,
       "options": {
