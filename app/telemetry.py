@@ -95,7 +95,7 @@ def instrument_fastapi(app: object) -> None:
     Args:
         app: FastAPI application instance
     """
-    FastAPIInstrumentor.instrument_app(app)  # type: ignore[arg-type]
+    FastAPIInstrumentor.instrument_app(app)
     logger.info("FastAPI instrumented with OpenTelemetry")
 
 
