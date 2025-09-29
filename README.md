@@ -310,6 +310,15 @@ All contributions must pass:
 6. Push to the branch (`git push origin feature/amazing-feature`)
 7. Open a Pull Request
 
+### Automated Dependency Updates
+
+This repository uses **Dependabot** to automatically keep dependencies up to date:
+- 🔄 **Weekly updates** every Monday at 09:00 UTC
+- 📦 **Python packages** (via Poetry/pyproject.toml)
+- 🐳 **Docker images** (base images and tools)
+- ⚙️ **GitHub Actions** (workflow dependencies)
+- 🏷️ **Grouped updates** for related packages (OpenTelemetry, FastAPI, dev tools)
+
 ## 📦 Technology Stack
 
 - **Framework**: FastAPI 0.115+
@@ -318,7 +327,7 @@ All contributions must pass:
 - **Validation**: Pydantic V2
 - **Testing**: pytest with pytest-asyncio
 - **Code Quality**: Black, Ruff, Mypy
-- **Dependency Management**: Poetry
+- **Dependency Management**: Poetry + Dependabot
 - **Containerization**: Docker with multi-stage builds
 
 ## 📄 License
