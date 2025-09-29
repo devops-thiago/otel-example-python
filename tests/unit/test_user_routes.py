@@ -30,7 +30,9 @@ class TestCreateUser:
     """Tests for POST /api/users endpoint."""
 
     @patch("app.routes.user_routes.UserRepository")
-    def test_create_user_success(self, mock_repo_class: AsyncMock, sample_user: User) -> None:
+    def test_create_user_success(
+        self, mock_repo_class: AsyncMock, sample_user: User
+    ) -> None:
         """Test successful user creation."""
         mock_repo = AsyncMock()
         mock_repo.get_by_email.return_value = None

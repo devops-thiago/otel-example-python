@@ -1,8 +1,8 @@
 """FastAPI application entry point."""
 
 import logging
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -12,7 +12,12 @@ from app.config import get_settings
 from app.database import close_db, engine
 from app.logging_config import setup_logging
 from app.routes import health, metrics, user_routes
-from app.telemetry import instrument_fastapi, instrument_sqlalchemy, setup_telemetry, shutdown_telemetry
+from app.telemetry import (
+    instrument_fastapi,
+    instrument_sqlalchemy,
+    setup_telemetry,
+    shutdown_telemetry,
+)
 
 # Setup logging first
 setup_logging()
@@ -22,7 +27,7 @@ settings = get_settings()
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
     """Lifespan context manager for startup and shutdown events."""
     # Startup
     logger.info("Starting application")

@@ -1,7 +1,6 @@
 """Pydantic schemas for User API."""
 
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
@@ -11,7 +10,7 @@ class UserBase(BaseModel):
 
     name: str = Field(..., min_length=1, max_length=100, description="User's full name")
     email: EmailStr = Field(..., description="User's email address")
-    bio: Optional[str] = Field(None, description="User's biography")
+    bio: str | None = Field(None, description="User's biography")
 
 
 class UserCreate(UserBase):
@@ -31,11 +30,11 @@ class UserCreate(UserBase):
 class UserUpdate(BaseModel):
     """Schema for updating a user."""
 
-    name: Optional[str] = Field(
+    name: str | None = Field(
         None, min_length=1, max_length=100, description="User's full name"
     )
-    email: Optional[EmailStr] = Field(None, description="User's email address")
-    bio: Optional[str] = Field(None, description="User's biography")
+    email: EmailStr | None = Field(None, description="User's email address")
+    bio: str | None = Field(None, description="User's biography")
 
     model_config = ConfigDict(
         json_schema_extra={

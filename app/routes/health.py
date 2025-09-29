@@ -45,5 +45,9 @@ async def ready(db: Annotated[AsyncSession, Depends(get_db)]) -> JSONResponse:
         logger.error("Readiness check failed: %s", str(e))
         return JSONResponse(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            content={"status": "not ready", "database": "disconnected", "error": str(e)},
+            content={
+                "status": "not ready",
+                "database": "disconnected",
+                "error": str(e),
+            },
         )

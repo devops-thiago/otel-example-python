@@ -8,7 +8,6 @@ from opentelemetry.exporter.otlp.proto.grpc._log_exporter import OTLPLogExporter
 from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExporter
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
-from opentelemetry.instrumentation.logging import LoggingInstrumentor
 from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
 from opentelemetry.instrumentation.system_metrics import SystemMetricsInstrumentor
 from opentelemetry.sdk._logs import LoggerProvider, LoggingHandler
@@ -60,13 +59,15 @@ def setup_telemetry(settings: Settings) -> None:
         metric_reader = PeriodicExportingMetricReader(
             metric_exporter, export_interval_millis=60000
         )
-        meter_provider = MeterProvider(resource=resource, metric_readers=[metric_reader])
+        meter_provider = MeterProvider(
+            resource=resource, metric_readers=[metric_reader]
+        )
         metrics.set_meter_provider(meter_provider)
-        
+
         # Instrument system metrics (CPU, memory, network, disk)
         # Use default configuration by not passing config parameter
         SystemMetricsInstrumentor().instrument()
-        
+
         logger.info("OpenTelemetry metrics initialized with system instrumentation")
 
     # Setup logging instrumentation if enabled
@@ -75,16 +76,16 @@ def setup_telemetry(settings: Settings) -> None:
         log_exporter = OTLPLogExporter(
             endpoint=settings.otel_exporter_otlp_endpoint, insecure=True
         )
-        
+
         # Create logger provider with batch processor
         logger_provider = LoggerProvider(resource=resource)
         logger_provider.add_log_record_processor(BatchLogRecordProcessor(log_exporter))
         set_logger_provider(logger_provider)
-        
+
         # Attach OTLP handler to root logger
         handler = LoggingHandler(level=logging.NOTSET, logger_provider=logger_provider)
         logging.getLogger().addHandler(handler)
-        
+
         logger.info("OpenTelemetry logging initialized with OTLP exporter")
 
 
@@ -94,7 +95,7 @@ def instrument_fastapi(app: object) -> None:
     Args:
         app: FastAPI application instance
     """
-    FastAPIInstrumentor.instrument_app(app)  # type: ignore
+    FastAPIInstrumentor.instrument_app(app)  # type: ignore[arg-type]
     logger.info("FastAPI instrumented with OpenTelemetry")
 
 
@@ -104,25 +105,25 @@ def instrument_sqlalchemy(engine: object) -> None:
     Args:
         engine: SQLAlchemy engine instance
     """
-    SQLAlchemyInstrumentor().instrument(engine=engine)  # type: ignore
+    SQLAlchemyInstrumentor().instrument(engine=engine)
     logger.info("SQLAlchemy instrumented with OpenTelemetry")
 
 
 def shutdown_telemetry() -> None:
     """Shutdown OpenTelemetry providers."""
     from opentelemetry._logs import get_logger_provider
-    
+
     trace_provider = trace.get_tracer_provider()
     if hasattr(trace_provider, "shutdown"):
-        trace_provider.shutdown()  # type: ignore
+        trace_provider.shutdown()
         logger.info("OpenTelemetry tracer provider shut down")
 
     meter_provider = metrics.get_meter_provider()
     if hasattr(meter_provider, "shutdown"):
-        meter_provider.shutdown()  # type: ignore
+        meter_provider.shutdown()
         logger.info("OpenTelemetry meter provider shut down")
-    
+
     logger_provider = get_logger_provider()
     if hasattr(logger_provider, "shutdown"):
-        logger_provider.shutdown()  # type: ignore
+        logger_provider.shutdown()
         logger.info("OpenTelemetry logger provider shut down")

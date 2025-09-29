@@ -51,9 +51,7 @@ async def create_user(
     summary="Get all users",
     description="Retrieve a list of all users",
 )
-async def get_users(
-    db: Annotated[AsyncSession, Depends(get_db)]
-) -> UserListResponse:
+async def get_users(db: Annotated[AsyncSession, Depends(get_db)]) -> UserListResponse:
     """Get all users."""
     repository = UserRepository(db)
     users = await repository.get_all()

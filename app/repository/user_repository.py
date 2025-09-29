@@ -1,7 +1,6 @@
 """User repository for database operations."""
 
 import logging
-from typing import Optional
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -39,7 +38,7 @@ class UserRepository:
         logger.info("Created user with id=%d, email=%s", user.id, user.email)
         return user
 
-    async def get_by_id(self, user_id: int) -> Optional[User]:
+    async def get_by_id(self, user_id: int) -> User | None:
         """Get user by ID.
 
         Args:
@@ -67,7 +66,7 @@ class UserRepository:
         logger.debug("Retrieved %d users", len(users))
         return users
 
-    async def update(self, user_id: int, user_data: UserUpdate) -> Optional[User]:
+    async def update(self, user_id: int, user_data: UserUpdate) -> User | None:
         """Update user by ID.
 
         Args:
@@ -110,7 +109,7 @@ class UserRepository:
         logger.info("Deleted user with id=%d", user_id)
         return True
 
-    async def get_by_email(self, email: str) -> Optional[User]:
+    async def get_by_email(self, email: str) -> User | None:
         """Get user by email.
 
         Args:

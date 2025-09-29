@@ -12,7 +12,7 @@ router = APIRouter(tags=["metrics"])
 )
 async def metrics() -> dict[str, str]:
     """OpenTelemetry metrics status endpoint.
-    
+
     All metrics are automatically exported via OTLP to the configured collector.
     This endpoint confirms metrics are being collected.
     """

@@ -7,7 +7,7 @@ from sqlalchemy import Column, DateTime, Integer, String, Text
 from app.database import Base
 
 
-class User(Base):
+class User(Base):  # type: ignore[misc]
     """User model."""
 
     __tablename__ = "users"

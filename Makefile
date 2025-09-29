@@ -1,4 +1,4 @@
-.PHONY: install test coverage lint format format-check type-check docker-build docker-up docker-down clean help
+.PHONY: install test coverage lint lint-fix format fmt format-check type-check check-all docker-build docker-up docker-down clean help
 
 help:
 	@echo "Available commands:"
@@ -6,9 +6,12 @@ help:
 	@echo "  test            - Run tests"
 	@echo "  coverage        - Run tests with coverage report"
 	@echo "  lint            - Run ruff linter"
-	@echo "  format          - Format code with black"
+	@echo "  lint-fix        - Run ruff linter and fix issues"
+	@echo "  format          - Format code with black and fix imports"
+	@echo "  fmt             - Alias for format"
 	@echo "  format-check    - Check code formatting"
 	@echo "  type-check      - Run mypy type checking"
+	@echo "  check-all       - Run all checks (lint, format-check, type-check)"
 	@echo "  docker-build    - Build Docker image"
 	@echo "  docker-up       - Start all services with docker-compose"
 	@echo "  docker-down     - Stop all services"
@@ -30,11 +33,17 @@ lint:
 	@echo "Running ruff linter..."
 	poetry run ruff check app/ tests/
 
+lint-fix:
+	@echo "Running ruff linter and fixing issues..."
+	poetry run ruff check --fix app/ tests/
+
 format:
 	@echo "Formatting code with black..."
 	poetry run black app/ tests/
-	@echo "Sorting imports with ruff..."
-	poetry run ruff check --select I --fix app/ tests/
+	@echo "Fixing lint issues with ruff..."
+	poetry run ruff check --fix app/ tests/
+
+fmt: format
 
 format-check:
 	@echo "Checking code formatting..."
@@ -44,6 +53,16 @@ format-check:
 type-check:
 	@echo "Running mypy type checking..."
 	poetry run mypy app/
+
+check-all:
+	@echo "Running all code quality checks..."
+	@echo "\n==> Running ruff linter..."
+	poetry run ruff check app/ tests/
+	@echo "\n==> Checking code formatting..."
+	poetry run black --check app/ tests/
+	@echo "\n==> Running mypy type checking..."
+	poetry run mypy app/
+	@echo "\n✅ All checks passed!"
 
 docker-build:
 	@echo "Building Docker image..."

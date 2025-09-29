@@ -1,6 +1,6 @@
 """Unit tests for UserRepository."""
 
-from datetime import datetime
+from datetime import UTC, datetime
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -51,13 +51,12 @@ class TestUserRepositoryCreate:
         )
 
         # Mock the created user
-        created_user = User(
+        _created_user = User(
             id=1,
             name="John Doe",
             email="john@example.com",
-            bio="Software Engineer",
-            created_at=datetime(2025, 1, 1),
-            updated_at=datetime(2025, 1, 1),
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
         )
 
         mock_session.refresh = AsyncMock()

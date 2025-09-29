@@ -3,7 +3,7 @@
 import logging
 import sys
 
-from pythonjsonlogger import jsonlogger
+from pythonjsonlogger.jsonlogger import JsonFormatter  # type: ignore[attr-defined]
 
 from app.config import get_settings
 
@@ -25,7 +25,7 @@ def setup_logging() -> None:
     console_handler.setLevel(settings.log_level.upper())
 
     # Create JSON formatter
-    formatter = jsonlogger.JsonFormatter(
+    formatter = JsonFormatter(
         "%(asctime)s %(name)s %(levelname)s %(message)s",
         datefmt="%Y-%m-%dT%H:%M:%SZ",
     )
