@@ -354,9 +354,3 @@ This repository uses **Dependabot** to automatically keep dependencies up to dat
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🌟 Acknowledgments
-
-- Built as a Python equivalent of [otel-example-go](https://github.com/devops-thiago/otel-example-go)
-- Powered by [FastAPI](https://fastapi.tiangolo.com/)
-- Instrumented with [OpenTelemetry](https://opentelemetry.io/)
-- Observability stack: Grafana Alloy, Tempo, Mimir, Loki
