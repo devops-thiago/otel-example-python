@@ -25,7 +25,7 @@ WORKDIR /app
 
 RUN pip install --no-cache-dir poetry==1.8.3
 
-COPY --from=deps /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY --from=deps /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
 COPY --from=deps /usr/local/bin /usr/local/bin
 
 COPY pyproject.toml ./
@@ -64,7 +64,7 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-COPY --from=builder --chown=root:root /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY --from=builder --chown=root:root /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
 COPY --from=builder --chown=root:root /usr/local/bin /usr/local/bin
 COPY --from=builder --chown=appuser:appuser /app/app ./app
 
