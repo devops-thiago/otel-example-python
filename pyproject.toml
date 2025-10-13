@@ -38,7 +38,7 @@ pytest-cov = "^7.0.0"
 pytest-mock = "^3.14.0"
 httpx = "^0.28.1"
 black = "^25.9.0"
-ruff = "^0.13.2"
+ruff = "^0.14.0"
 mypy = "^1.13.0"
 types-pymysql = "^1.1.0"
 
