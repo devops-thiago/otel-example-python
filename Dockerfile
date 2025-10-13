@@ -1,4 +1,4 @@
-FROM python:3.13-slim AS deps
+FROM python:3.14-slim AS deps
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -15,7 +15,7 @@ COPY pyproject.toml ./
 RUN poetry config virtualenvs.create false && \
     poetry install --no-interaction --no-ansi --only main --no-root
 
-FROM python:3.13-slim AS builder
+FROM python:3.14-slim AS builder
 
 ARG VERSION=dev
 ARG BUILD_DATE
@@ -35,7 +35,7 @@ RUN find . -name '*_test.py' -type f -delete && \
     find . -name 'test_*.py' -type f -delete && \
     find . -name '__pycache__' -type d -exec rm -rf {} + 2>/dev/null || true
 
-FROM python:3.13-slim
+FROM python:3.14-slim
 
 ARG VERSION=dev
 ARG BUILD_DATE
