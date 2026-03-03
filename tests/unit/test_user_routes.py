@@ -82,7 +82,7 @@ class TestCreateUser:
             json={"name": "John Doe", "email": "invalid-email", "bio": "Engineer"},
         )
 
-        assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+        assert response.status_code == status.HTTP_422_UNPROCESSABLE_CONTENT
 
     def test_create_user_missing_name(self) -> None:
         """Test creating user without name."""
@@ -91,7 +91,7 @@ class TestCreateUser:
             json={"email": "john@example.com", "bio": "Engineer"},
         )
 
-        assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+        assert response.status_code == status.HTTP_422_UNPROCESSABLE_CONTENT
 
 
 class TestGetUsers:
