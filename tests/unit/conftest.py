@@ -1,6 +1,6 @@
 """Unit test configuration and shared fixtures."""
 
-from collections.abc import AsyncGenerator
+from collections.abc import AsyncGenerator, Generator
 from unittest.mock import MagicMock
 
 import pytest
@@ -10,7 +10,7 @@ from app.main import app
 
 
 @pytest.fixture(autouse=True)
-def override_get_db() -> AsyncGenerator[None, None]:  # type: ignore[misc]
+def override_get_db() -> Generator[None, None, None]:
     """Override the get_db dependency to prevent real DB connections in unit tests."""
     mock_session = MagicMock()
 
