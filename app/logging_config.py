@@ -3,7 +3,7 @@
 import logging
 import sys
 
-from pythonjsonlogger.jsonlogger import JsonFormatter  # type: ignore[attr-defined]
+from pythonjsonlogger.json import JsonFormatter
 
 from app.config import get_settings
 
