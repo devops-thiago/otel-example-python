@@ -2,11 +2,11 @@
 
 [![CI](https://img.shields.io/github/actions/workflow/status/devops-thiago/otel-example-python/ci.yml?branch=main&label=CI)](https://github.com/devops-thiago/otel-example-python/actions)
 [![Python Version](https://img.shields.io/badge/python-3.11%2B-blue?logo=python)](https://www.python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115%2B-009688?logo=fastapi)](https://fastapi.tiangolo.com)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.131%2B-009688?logo=fastapi)](https://fastapi.tiangolo.com)
 [![License](https://img.shields.io/github/license/devops-thiago/otel-example-python)](LICENSE)
 [![Codecov](https://img.shields.io/codecov/c/github/devops-thiago/otel-example-python?label=coverage)](https://app.codecov.io/gh/devops-thiago/otel-example-python)
 [![Sonar Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=devops-thiago_otel-example-python&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=devops-thiago_otel-example-python)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=devops-thiago_otel-example-python&metric=coverage)](https://sonarcloud.io/summary/new_code?id=devops-thiago_otel-example-python)
+[![Sonar Coverage](https://sonarcloud.io/api/project_badges/measure?project=devops-thiago_otel-example-python&metric=coverage)](https://sonarcloud.io/summary/new_code?id=devops-thiago_otel-example-python)
 [![OpenTelemetry](https://img.shields.io/badge/OpenTelemetry-enabled-blue?logo=opentelemetry)](https://opentelemetry.io)
 [![Docker](https://img.shields.io/badge/Docker-ready-blue?logo=docker)](https://www.docker.com)
 [![Docker Hub](https://img.shields.io/docker/v/thiagosg/otel-crud-api-python?logo=docker&label=Docker%20Hub)](https://hub.docker.com/r/thiagosg/otel-crud-api-python)
