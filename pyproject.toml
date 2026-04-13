@@ -16,7 +16,7 @@ uvicorn = {extras = ["standard"], version = "^0.41.0"}
 pydantic = "^2.9.0"
 pydantic-settings = "^2.6.0"
 email-validator = "^2.2.0"
-sqlalchemy = "^2.0.35"
+sqlalchemy = "^2.0.49"
 aiomysql = "^0.3.2"
 pymysql = "^1.1.1"
 opentelemetry-api = "^1.28.0"
