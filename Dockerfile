@@ -1,6 +1,7 @@
 FROM python:3.14-slim AS deps
 
 RUN apt-get update && \
+    apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
         ca-certificates \
         curl \
@@ -8,7 +9,8 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-RUN pip install --no-cache-dir poetry==1.8.3
+RUN pip install --no-cache-dir --upgrade pip setuptools && \
+    pip install --no-cache-dir poetry==1.8.3
 
 COPY pyproject.toml ./
 
@@ -53,6 +55,7 @@ LABEL org.opencontainers.image.title="OpenTelemetry Python CRUD API" \
       org.opencontainers.image.licenses="MIT"
 
 RUN apt-get update && \
+    apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
         ca-certificates \
         curl \

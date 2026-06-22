@@ -42,12 +42,13 @@ async def ready(db: Annotated[AsyncSession, Depends(get_db)]) -> JSONResponse:
             content={"status": "ready", "database": "connected"},
         )
     except Exception as e:
+        # Log the detail server-side; do not leak exception text to the client
+        # (CodeQL: py/stack-trace-exposure).
         logger.error("Readiness check failed: %s", str(e))
         return JSONResponse(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             content={
                 "status": "not ready",
                 "database": "disconnected",
-                "error": str(e),
             },
         )
