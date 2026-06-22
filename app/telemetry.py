@@ -2,6 +2,7 @@
 
 import logging
 
+from fastapi import FastAPI
 from opentelemetry import metrics, trace
 from opentelemetry._logs import set_logger_provider
 from opentelemetry.exporter.otlp.proto.grpc._log_exporter import OTLPLogExporter
@@ -89,7 +90,7 @@ def setup_telemetry(settings: Settings) -> None:
         logger.info("OpenTelemetry logging initialized with OTLP exporter")
 
 
-def instrument_fastapi(app: object) -> None:
+def instrument_fastapi(app: FastAPI) -> None:
     """Instrument FastAPI application.
 
     Args:
